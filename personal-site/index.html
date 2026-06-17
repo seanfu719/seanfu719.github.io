@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>付晓康 · 作品集</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ========== 导航栏 ========== -->
+  <header class="nav" id="navbar">
+    <div class="nav__inner container">
+      <a href="#" class="nav__logo">可渡<span class="nav__logo-dot">·</span></a>
+      <button class="nav__toggle" id="navToggle" aria-label="切换菜单">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#about">关于</a></li>
+        <li><a href="#works">作品</a></li>
+        <li><a href="#contact">联系</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ========== Hero ========== -->
+  <section class="hero" id="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__content container">
+      <div class="hero__text">
+        <p class="hero__greeting">你好，我是</p>
+        <h1 class="hero__name">付晓康</h1>
+        <p class="hero__tagline">视觉传达设计 · 插画创作者</p>
+        <p class="hero__desc">
+          大三学生，热爱用画笔记录世界。<br>
+          厚涂、人体、光影——我着迷于一切有温度的画面。
+        </p>
+        <div class="hero__actions">
+          <a href="#works" class="btn btn--primary">看作品</a>
+          <a href="#contact" class="btn btn--outline">联系我</a>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <div class="hero__art-box">
+          <svg viewBox="0 0 300 300" class="hero__art-svg">
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f093fb" />
+                <stop offset="100%" stop-color="#f5576c" />
+              </linearGradient>
+              <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#4facfe" />
+                <stop offset="100%" stop-color="#00f2fe" />
+              </linearGradient>
+            </defs>
+            <!-- 抽象插画风格装饰 -->
+            <circle cx="150" cy="130" r="70" fill="none" stroke="url(#grad1)" stroke-width="3" opacity="0.6"/>
+            <circle cx="150" cy="130" r="50" fill="none" stroke="url(#grad2)" stroke-width="2" opacity="0.5"/>
+            <circle cx="150" cy="130" r="30" fill="url(#grad1)" opacity="0.3"/>
+            <!-- 画笔 -->
+            <g transform="translate(180, 160) rotate(-30)">
+              <rect x="0" y="-2" width="60" height="4" rx="2" fill="#f5576c" opacity="0.7"/>
+              <polygon points="60,-2 60,2 72,0" fill="#f093fb" opacity="0.8"/>
+            </g>
+            <!-- 散落的点 -->
+            <circle cx="100" cy="180" r="3" fill="#4facfe" opacity="0.6">
+              <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="200" cy="90" r="2" fill="#f093fb" opacity="0.6">
+              <animate attributeName="opacity" values="0.2;0.6;0.2" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="120" cy="80" r="4" fill="#00f2fe" opacity="0.4">
+              <animate attributeName="opacity" values="0.4;0.8;0.4" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <!-- 调色盘 -->
+            <g transform="translate(80, 170)">
+              <ellipse cx="0" cy="0" rx="25" ry="12" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.3"/>
+              <circle cx="-10" cy="-3" r="4" fill="#f5576c" opacity="0.7"/>
+              <circle cx="0" cy="-6" r="4" fill="#4facfe" opacity="0.7"/>
+              <circle cx="10" cy="-3" r="4" fill="#f093fb" opacity="0.7"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="hero__scroll">
+      <span>向下滚动</span>
+      <div class="hero__scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ========== 关于我 ========== -->
+  <section class="section about" id="about">
+    <div class="container">
+      <h2 class="section__title">关于我</h2>
+      <div class="about__grid">
+        <div class="about__card">
+          <div class="about__icon">🎨</div>
+          <h3>绘画</h3>
+          <p>厚涂插画是心头好，人体结构、光影透视一直在练。画得开心比什么都重要。</p>
+        </div>
+        <div class="about__card">
+          <div class="about__icon">📐</div>
+          <h3>设计</h3>
+          <p>视觉传达设计大三在读。字体、排版、品牌——好设计是有道理的。</p>
+        </div>
+        <div class="about__card">
+          <div class="about__icon">🎵</div>
+          <h3>创作</h3>
+          <p>除了画画还喜欢捣鼓音乐（库乐队）、数码产品和 AI，什么都想试试。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 作品集 ========== -->
+  <section class="section works" id="works">
+    <div class="container">
+      <h2 class="section__title">我的作品</h2>
+      <p class="section__subtitle">这里放我做过的一些有意思的东西</p>
+      <div class="works__grid" id="worksGrid">
+        <!-- 作品卡片 — 占位，后续可以替换 -->
+        <div class="work-card">
+          <div class="work-card__img">
+            <div class="work-card__placeholder">
+              <span>🖼️</span>
+            </div>
+          </div>
+          <div class="work-card__info">
+            <h3>作品一</h3>
+            <p>你的第一件作品</p>
+          </div>
+        </div>
+        <div class="work-card">
+          <div class="work-card__img">
+            <div class="work-card__placeholder">
+              <span>🎨</span>
+            </div>
+          </div>
+          <div class="work-card__info">
+            <h3>作品二</h3>
+            <p>上传你的作品图片</p>
+          </div>
+        </div>
+        <div class="work-card">
+          <div class="work-card__img">
+            <div class="work-card__placeholder">
+              <span>✏️</span>
+            </div>
+          </div>
+          <div class="work-card__info">
+            <h3>作品三</h3>
+            <p>展示你的创作</p>
+          </div>
+        </div>
+        <div class="work-card">
+          <div class="work-card__img">
+            <div class="work-card__placeholder">
+              <span>🌟</span>
+            </div>
+          </div>
+          <div class="work-card__info">
+            <h3>作品四</h3>
+            <p>还可以放更多</p>
+          </div>
+        </div>
+        <div class="work-card">
+          <div class="work-card__img">
+            <div class="work-card__placeholder">
+              <span>🌈</span>
+            </div>
+          </div>
+          <div class="work-card__info">
+            <h3>作品五</h3>
+            <p>尽情展示吧</p>
+          </div>
+        </div>
+        <div class="work-card">
+          <div class="work-card__img">
+            <div class="work-card__placeholder">
+              <span>🚀</span>
+            </div>
+          </div>
+          <div class="work-card__info">
+            <h3>更多作品</h3>
+            <p>陆续更新中...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 联系我 ========== -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <h2 class="section__title">联系我</h2>
+      <p class="section__subtitle">一起聊聊绘画、设计，或者随便什么有趣的事</p>
+      <div class="contact__content">
+        <div class="contact__info">
+          <div class="contact__item">
+            <span class="contact__label">📧 邮箱</span>
+            <a href="mailto:your.email@example.com" class="contact__value">your.email@example.com</a>
+          </div>
+          <div class="contact__item">
+            <span class="contact__label">📱 微信</span>
+            <span class="contact__value">你的微信号</span>
+          </div>
+          <div class="contact__item">
+            <span class="contact__label">🎨 站酷 / 小红书</span>
+            <span class="contact__value">你的社交账号</span>
+          </div>
+        </div>
+        <p class="contact__note">* 联系方式可以随时替换，网站改起来很快</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 付晓康 · Made with 🧭</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
