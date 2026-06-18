@@ -3,226 +3,345 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>付晓康 · 作品集</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
-  <link rel="stylesheet" href="css/style.css" />
+  <title>付晓康 · 插画作品集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>" />
+  <link rel="stylesheet" href="css/glow.css" />
 </head>
 <body>
 
-  <!-- ========== 导航栏 ========== -->
-  <header class="nav" id="navbar">
+  <!-- 导航 -->
+  <nav class="nav" id="nav">
     <div class="nav__inner container">
-      <a href="#" class="nav__logo">可渡<span class="nav__logo-dot">·</span></a>
-      <button class="nav__toggle" id="navToggle" aria-label="切换菜单">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav__links" id="navLinks">
-        <li><a href="#about">关于</a></li>
-        <li><a href="#works">作品</a></li>
-        <li><a href="#contact">联系</a></li>
-      </ul>
-    </div>
-  </header>
-
-  <!-- ========== Hero ========== -->
-  <section class="hero" id="hero">
-    <div class="hero__bg"></div>
-    <div class="hero__content container">
-      <div class="hero__text">
-        <p class="hero__greeting">你好，我是</p>
-        <h1 class="hero__name">付晓康</h1>
-        <p class="hero__tagline">视觉传达设计 · 插画创作者</p>
-        <p class="hero__desc">
-          大三学生，热爱用画笔记录世界。<br>
-          厚涂、人体、光影——我着迷于一切有温度的画面。
-        </p>
-        <div class="hero__actions">
-          <a href="#works" class="btn btn--primary">看作品</a>
-          <a href="#contact" class="btn btn--outline">联系我</a>
-        </div>
+      <a href="#" class="nav__logo">FXK.</a>
+      <div class="nav__right">
+        <ul class="nav__links">
+          <li><a href="#works" class="nav__link">作品</a></li>
+          <li><a href="#about" class="nav__link">关于</a></li>
+          <li><a href="#contact" class="nav__link">联系</a></li>
+        </ul>
+        <button class="nav__toggle" id="navToggle">
+          <span></span><span></span>
+        </button>
       </div>
-      <div class="hero__visual">
-        <div class="hero__art-box">
-          <svg viewBox="0 0 300 300" class="hero__art-svg">
-            <defs>
-              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#f093fb" />
-                <stop offset="100%" stop-color="#f5576c" />
-              </linearGradient>
-              <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#4facfe" />
-                <stop offset="100%" stop-color="#00f2fe" />
-              </linearGradient>
-            </defs>
-            <!-- 抽象插画风格装饰 -->
-            <circle cx="150" cy="130" r="70" fill="none" stroke="url(#grad1)" stroke-width="3" opacity="0.6"/>
-            <circle cx="150" cy="130" r="50" fill="none" stroke="url(#grad2)" stroke-width="2" opacity="0.5"/>
-            <circle cx="150" cy="130" r="30" fill="url(#grad1)" opacity="0.3"/>
-            <!-- 画笔 -->
-            <g transform="translate(180, 160) rotate(-30)">
-              <rect x="0" y="-2" width="60" height="4" rx="2" fill="#f5576c" opacity="0.7"/>
-              <polygon points="60,-2 60,2 72,0" fill="#f093fb" opacity="0.8"/>
-            </g>
-            <!-- 散落的点 -->
-            <circle cx="100" cy="180" r="3" fill="#4facfe" opacity="0.6">
-              <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="200" cy="90" r="2" fill="#f093fb" opacity="0.6">
-              <animate attributeName="opacity" values="0.2;0.6;0.2" dur="2.5s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="120" cy="80" r="4" fill="#00f2fe" opacity="0.4">
-              <animate attributeName="opacity" values="0.4;0.8;0.4" dur="4s" repeatCount="indefinite"/>
-            </circle>
-            <!-- 调色盘 -->
-            <g transform="translate(80, 170)">
-              <ellipse cx="0" cy="0" rx="25" ry="12" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.3"/>
-              <circle cx="-10" cy="-3" r="4" fill="#f5576c" opacity="0.7"/>
-              <circle cx="0" cy="-6" r="4" fill="#4facfe" opacity="0.7"/>
-              <circle cx="10" cy="-3" r="4" fill="#f093fb" opacity="0.7"/>
-            </g>
-          </svg>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <canvas class="hero__liquid" id="heroLiquid"></canvas>
+    <div class="container">
+      <div class="hero__content">
+        <div class="hero__left">
+          <span class="hero__tag">PORTFOLIO 2026</span>
+          <h1 class="hero__title">
+            <span class="hero__title-line">付晓康</span>
+            <span class="hero__title-sub">插画师 & 视觉设计师</span>
+          </h1>
+          <p class="hero__desc">
+            厚涂人像创作者，四年自学绘画<br>
+            专注于光影、情绪与氛围的表达
+          </p>
+          <div class="hero__actions">
+            <a href="#works" class="btn btn--primary">浏览作品</a>
+            <a href="#contact" class="btn btn--ghost">联系我</a>
+          </div>
+        </div>
+        <div class="hero__right">
+          <div class="hero__stats">
+            <div class="hero__stat">
+              <span class="hero__stat-num" data-count="16">0</span>
+              <span class="hero__stat-label">精选作品</span>
+            </div>
+            <div class="hero__stat">
+              <span class="hero__stat-num" data-count="4">0</span>
+              <span class="hero__stat-label">年绘画</span>
+            </div>
+            <div class="hero__stat">
+              <span class="hero__stat-num">∞</span>
+              <span class="hero__stat-label">创作热情</span>
+            </div>
+          </div>
+          <div class="hero__contact-bar">
+            <span class="hero__contact-label">Find me</span>
+            <a href="#contact" class="hero__contact-link">Email</a>
+            <span class="hero__contact-divider">/</span>
+            <a href="#contact" class="hero__contact-link">WeChat</a>
+            <span class="hero__contact-divider">/</span>
+            <a href="#contact" class="hero__contact-link">RED</a>
+          </div>
         </div>
       </div>
     </div>
     <div class="hero__scroll">
-      <span>向下滚动</span>
-      <div class="hero__scroll-arrow"></div>
+      <span>SCROLL</span>
+      <div class="hero__scroll-line"></div>
     </div>
   </section>
 
-  <!-- ========== 关于我 ========== -->
-  <section class="section about" id="about">
+  <!-- Works -->
+  <section class="works section" id="works">
     <div class="container">
-      <h2 class="section__title">关于我</h2>
+      <div class="section__head">
+        <span class="section__tag">SELECTED WORKS</span>
+        <h2 class="section__title">精选作品</h2>
+        <p class="section__subtitle">厚涂人像、场景创作与基础练习</p>
+      </div>
+
+      <!-- Filter -->
+      <div class="works__filter">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="portrait">厚涂人像</button>
+        <button class="filter-btn" data-filter="scene">场景创作</button>
+        <button class="filter-btn" data-filter="study">基础练习</button>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="works__gallery">
+        <!-- Row 1 - Featured large pieces -->
+        <div class="gallery__item gallery__item--large" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0615.jpg" alt="柔光" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">柔光</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="scene">
+          <img src="assets/images/optimized/IMG_0609.jpg" alt="宇航员" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">场景创作</span>
+            <h3 class="gallery__title">宇航员</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0611.jpg" alt="凝视" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">凝视</h3>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0266.jpg" alt="雪中人" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">雪中人</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item gallery__item--wide" data-category="scene">
+          <img src="assets/images/optimized/IMG_0748.jpg" alt="诊疗室" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">场景创作</span>
+            <h3 class="gallery__title">诊疗室</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0742.jpg" alt="清新" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">清新</h3>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0612.jpg" alt="不羁" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">不羁</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0613.jpg" alt="耳机" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">耳机</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0614.jpg" alt="沉思" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">沉思</h3>
+          </div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0731.jpg" alt="午后" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">午后</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="portrait">
+          <img src="assets/images/optimized/IMG_0740.jpg" alt="侧颜" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">厚涂人像</span>
+            <h3 class="gallery__title">侧颜</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item gallery__item--wide" data-category="scene">
+          <img src="assets/images/optimized/IMG_0747.jpg" alt="海边" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">场景创作</span>
+            <h3 class="gallery__title">海边</h3>
+          </div>
+        </div>
+
+        <!-- Row 5 - Studies -->
+        <div class="gallery__item" data-category="study">
+          <img src="assets/images/optimized/IMG_0735.jpg" alt="色块日记" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">色彩练习</span>
+            <h3 class="gallery__title">色块日记</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="study">
+          <img src="assets/images/optimized/IMG_0743.jpg" alt="静物" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">静物练习</span>
+            <h3 class="gallery__title">静物</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="study">
+          <img src="assets/images/optimized/IMG_0733.jpg" alt="形态研究" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">造型练习</span>
+            <h3 class="gallery__title">形态研究</h3>
+          </div>
+        </div>
+
+        <div class="gallery__item" data-category="study">
+          <img src="assets/images/optimized/IMG_0736.jpg" alt="构成探索" loading="lazy">
+          <div class="gallery__overlay">
+            <span class="gallery__tag">构成练习</span>
+            <h3 class="gallery__title">构成探索</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about section" id="about">
+    <div class="container">
+      <div class="section__head">
+        <span class="section__tag">ABOUT</span>
+        <h2 class="section__title">关于我</h2>
+      </div>
       <div class="about__grid">
-        <div class="about__card">
-          <div class="about__icon">🎨</div>
-          <h3>绘画</h3>
-          <p>厚涂插画是心头好，人体结构、光影透视一直在练。画得开心比什么都重要。</p>
+        <div class="about__bio">
+          <p>
+            视觉传达设计专业在读，四年自学绘画经验。<br><br>
+            主攻<strong>厚涂人像</strong>，着迷于光影、皮肤质感与情绪表达。<br>
+            相信扎实的基础胜过天赋，每一笔都是与画面的对话。
+          </p>
+          <div class="about__skills">
+            <div class="skill-item">
+              <span class="skill__name">厚涂人像</span>
+              <div class="skill__bar"><div class="skill__fill" style="width: 90%"></div></div>
+            </div>
+            <div class="skill-item">
+              <span class="skill__name">色彩把控</span>
+              <div class="skill__bar"><div class="skill__fill" style="width: 85%"></div></div>
+            </div>
+            <div class="skill-item">
+              <span class="skill__name">场景氛围</span>
+              <div class="skill__bar"><div class="skill__fill" style="width: 75%"></div></div>
+            </div>
+            <div class="skill-item">
+              <span class="skill__name">设计排版</span>
+              <div class="skill__bar"><div class="skill__fill" style="width: 70%"></div></div>
+            </div>
+          </div>
         </div>
-        <div class="about__card">
-          <div class="about__icon">📐</div>
-          <h3>设计</h3>
-          <p>视觉传达设计大三在读。字体、排版、品牌——好设计是有道理的。</p>
-        </div>
-        <div class="about__card">
-          <div class="about__icon">🎵</div>
-          <h3>创作</h3>
-          <p>除了画画还喜欢捣鼓音乐（库乐队）、数码产品和 AI，什么都想试试。</p>
+        <div class="about__cards">
+          <div class="about__card">
+            <div class="about__card-icon">🎨</div>
+            <div>
+              <h3>绘画工具</h3>
+              <p>iPad Pro + Procreate / Photoshop</p>
+            </div>
+          </div>
+          <div class="about__card">
+            <div class="about__card-icon">📐</div>
+            <div>
+              <h3>设计风格</h3>
+              <p>写实厚涂、情绪表达、电影感</p>
+            </div>
+          </div>
+          <div class="about__card">
+            <div class="about__card-icon">🎵</div>
+            <div>
+              <h3>创作习惯</h3>
+              <p>听音乐、看电影、记录灵感</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== 作品集 ========== -->
-  <section class="section works" id="works">
+  <!-- Contact -->
+  <section class="contact section" id="contact">
     <div class="container">
-      <h2 class="section__title">我的作品</h2>
-      <p class="section__subtitle">这里放我做过的一些有意思的东西</p>
-      <div class="works__grid" id="worksGrid">
-        <!-- 作品卡片 — 占位，后续可以替换 -->
-        <div class="work-card">
-          <div class="work-card__img">
-            <div class="work-card__placeholder">
-              <span>🖼️</span>
-            </div>
-          </div>
-          <div class="work-card__info">
-            <h3>作品一</h3>
-            <p>你的第一件作品</p>
-          </div>
+      <div class="section__head">
+        <span class="section__tag">CONTACT</span>
+        <h2 class="section__title">联系我</h2>
+        <p class="section__subtitle">合作、约稿，或只是聊聊绘画</p>
+      </div>
+      <div class="contact__grid">
+        <div class="contact__card">
+          <span class="contact__icon">✉️</span>
+          <span class="contact__label">邮箱</span>
+          <span class="contact__value">your.email@example.com</span>
         </div>
-        <div class="work-card">
-          <div class="work-card__img">
-            <div class="work-card__placeholder">
-              <span>🎨</span>
-            </div>
-          </div>
-          <div class="work-card__info">
-            <h3>作品二</h3>
-            <p>上传你的作品图片</p>
-          </div>
+        <div class="contact__card">
+          <span class="contact__icon">💬</span>
+          <span class="contact__label">微信</span>
+          <span class="contact__value">你的微信号</span>
         </div>
-        <div class="work-card">
-          <div class="work-card__img">
-            <div class="work-card__placeholder">
-              <span>✏️</span>
-            </div>
-          </div>
-          <div class="work-card__info">
-            <h3>作品三</h3>
-            <p>展示你的创作</p>
-          </div>
-        </div>
-        <div class="work-card">
-          <div class="work-card__img">
-            <div class="work-card__placeholder">
-              <span>🌟</span>
-            </div>
-          </div>
-          <div class="work-card__info">
-            <h3>作品四</h3>
-            <p>还可以放更多</p>
-          </div>
-        </div>
-        <div class="work-card">
-          <div class="work-card__img">
-            <div class="work-card__placeholder">
-              <span>🌈</span>
-            </div>
-          </div>
-          <div class="work-card__info">
-            <h3>作品五</h3>
-            <p>尽情展示吧</p>
-          </div>
-        </div>
-        <div class="work-card">
-          <div class="work-card__img">
-            <div class="work-card__placeholder">
-              <span>🚀</span>
-            </div>
-          </div>
-          <div class="work-card__info">
-            <h3>更多作品</h3>
-            <p>陆续更新中...</p>
-          </div>
+        <div class="contact__card">
+          <span class="contact__icon">📱</span>
+          <span class="contact__label">小红书</span>
+          <span class="contact__value">@你的账号</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ========== 联系我 ========== -->
-  <section class="section contact" id="contact">
-    <div class="container">
-      <h2 class="section__title">联系我</h2>
-      <p class="section__subtitle">一起聊聊绘画、设计，或者随便什么有趣的事</p>
-      <div class="contact__content">
-        <div class="contact__info">
-          <div class="contact__item">
-            <span class="contact__label">📧 邮箱</span>
-            <a href="mailto:your.email@example.com" class="contact__value">your.email@example.com</a>
-          </div>
-          <div class="contact__item">
-            <span class="contact__label">📱 微信</span>
-            <span class="contact__value">你的微信号</span>
-          </div>
-          <div class="contact__item">
-            <span class="contact__label">🎨 站酷 / 小红书</span>
-            <span class="contact__value">你的社交账号</span>
-          </div>
-        </div>
-        <p class="contact__note">* 联系方式可以随时替换，网站改起来很快</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== Footer ========== -->
+  <!-- Footer -->
   <footer class="footer">
-    <div class="container">
-      <p>&copy; 2026 付晓康 · Made with 🧭</p>
-    </div>
+    <p>&copy; 2026 付晓康 · Made with 🧭</p>
   </footer>
 
-  <script src="js/script.js"></script>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox__close">&times;</button>
+    <button class="lightbox__nav lightbox__prev">‹</button>
+    <button class="lightbox__nav lightbox__next">›</button>
+    <div class="lightbox__content">
+      <img src="" alt="" id="lightboxImg">
+      <div class="lightbox__info">
+        <h3 id="lightboxTitle"></h3>
+        <span id="lightboxTag"></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/glow.js"></script>
 </body>
 </html>
