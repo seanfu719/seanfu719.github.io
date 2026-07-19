@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>洛克王国 - 精灵召唤</title>
+<style>
+  :root {
+    --bg: #0a0a1a;
+    --gold: #ffd700;
+    --purple: #a855f7;
+    --blue: #3b82f6;
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ===== 星空背景 ===== */
+  .stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== 主容器 ===== */
+  .main-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ===== 标题 ===== */
+  .header {
+    text-align: center;
+    margin: 20px 0 10px;
+  }
+
+  .header .subtitle {
+    font-size: 14px;
+    color: #888;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .header h1 {
+    font-size: 42px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffd700, #ff8c00, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    letter-spacing: 3px;
+    animation: titleGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes titleGlow {
+    0% { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4)); }
+    100% { filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.7)); }
+  }
+
+  .header .stats-bar {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #aaa;
+  }
+
+  .header .stats-bar span {
+    background: rgba(255,255,255,0.05);
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .header .stats-bar strong {
+    color: #ffd700;
+  }
+
+  /* ===== 召唤区域 ===== */
+  .summon-area {
+    position: relative;
+    width: 380px;
+    height: 380px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 魔法阵 */
+  .magic-circle {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    border: 3px solid rgba(168, 85, 247, 0.3);
+    box-shadow: 0 0 60px rgba(168, 85, 247, 0.15), inset 0 0 60px rgba(168, 85, 247, 0.08);
+    transition: all 0.6s ease;
+  }
+
+  .magic-circle.charging {
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 100px rgba(255, 215, 0, 0.3), inset 0 0 100px rgba(255, 140, 0, 0.15);
+    animation: circlePulse 0.5s ease-in-out infinite;
+  }
+
+  .magic-circle.summoning {
+    border-color: rgba(255, 215, 0, 0.9) !important;
+    box-shadow: 0 0 150px rgba(255, 215, 0, 0.6), 0 0 300px rgba(255, 140, 0, 0.4), inset 0 0 150px rgba(255, 215, 0, 0.2) !important;
+    animation: circleBurst 0.8s ease-out;
+  }
+
+  @keyframes circlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+  }
+
+  @keyframes circleBurst {
+    0% { transform: scale(0.9); opacity: 0.5; }
+    30% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* 内圈符文 */
+  .magic-circle .rune-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 280px; height: 280px;
+    margin: -140px 0 0 -140px;
+    border-radius: 50%;
+    border: 1px dashed rgba(168, 85, 247, 0.2);
+    animation: runeRotate 20s linear infinite;
+  }
+
+  .magic-circle .rune-ring:nth-child(2) {
+    width: 220px; height: 220px;
+    margin: -110px 0 0 -110px;
+    border-style: dotted;
+    animation-duration: 15s;
+    animation-direction: reverse;
+  }
+
+  .magic-circle .rune-ring:nth-child(3) {
+    width: 160px; height: 160px;
+    margin: -80px 0 0 -80px;
+    border-style: solid;
+    border-color: rgba(168, 85, 247, 0.15);
+    animation-duration: 10s;
+  }
+
+  @keyframes runeRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* 符文标记 */
+  .rune-mark {
+    position: absolute;
+    font-size: 18px;
+    color: rgba(168, 85, 247, 0.5);
+    opacity: 0.6;
+  }
+
+  .rune-mark.top { top: -10px; left: 50%; transform: translateX(-50%); }
+  .rune-mark.bottom { bottom: -10px; left: 50%; transform: translateX(-50%); }
+  .rune-mark.left { left: -10px; top: 50%; transform: translateY(-50%); }
+  .rune-mark.right { right: -10px; top: 50%; transform: translateY(-50%); }
+
+  /* 中心球 */
+  .center-orb {
+    position: absolute;
+    width: 60px; height: 60px;
+    top: 50%; left: 50%;
+    margin: -30px 0 0 -30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, rgba(168,85,247,0.6), rgba(88,28,135,0.8));
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
+    transition: all 0.5s ease;
+    z-index: 2;
+  }
+
+  .center-orb.charging {
+    background: radial-gradient(circle at 40% 40%, rgba(255,215,0,0.8), rgba(200,100,0,0.9));
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.6);
+    animation: orbGlow 0.3s ease-in-out infinite alternate;
+  }
+
+  @keyframes orbGlow {
+    0% { box-shadow: 0 0 60px rgba(255,215,0,0.6); }
+    100% { box-shadow: 0 0 100px rgba(255,215,0,1), 0 0 200px rgba(255,140,0,0.5); }
+  }
+
+  /* 粒子 */
+  .particle {
+    position: absolute;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* ===== 按钮 ===== */
+  .btn-summon {
+    position: relative;
+    z-index: 5;
+    padding: 16px 50px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
+    transition: all 0.3s ease;
+    outline: none;
+  }
+
+  .btn-summon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.6);
+  }
+
+  .btn-summon:active {
+    transform: scale(0.95);
+  }
+
+  .btn-summon:disabled {
+    background: #333;
+    color: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .btn-summon .btn-icon {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 26px;
+  }
+
+  /* ===== 结果展示 ===== */
+  .result-area {
+    width: 100%;
+    max-width: 700px;
+    min-height: 200px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .result-title {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  /* 精灵卡片 */
+  .pet-card {
+    background: linear-gradient(145deg, rgba(30,30,60,0.95), rgba(20,20,40,0.95));
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    position: relative;
+    border: 2px solid rgba(255,255,255,0.1);
+    animation: cardAppear 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .pet-card.legendary {
+    border-color: rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 40px rgba(255,215,0,0.2), 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .pet-card.epic {
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 30px rgba(168,85,247,0.2), 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .pet-card.rare {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 25px rgba(59,130,246,0.15), 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  @keyframes cardAppear {
+    0% { opacity: 0; transform: translateY(40px) scale(0.8); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .pet-card .rarity-badge {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .rarity-badge.legendary { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; }
+  .rarity-badge.epic { background: linear-gradient(135deg, #a855f7, #7c3aed); color: #fff; }
+  .rarity-badge.rare { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; }
+  .rarity-badge.common { background: linear-gradient(135deg, #22c55e, #15803d); color: #fff; }
+
+  .pet-card .pet-icon {
+    font-size: 80px;
+    margin: 10px 0;
+    animation: petIdle 2s ease-in-out infinite;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+  }
+
+  @keyframes petIdle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .pet-card .pet-name {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 2px;
+  }
+
+  .pet-card .pet-type {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .pet-card .pet-desc {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .pet-card .pet-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .pet-card .stat-item {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 8px 4px;
+  }
+
+  .pet-card .stat-item .stat-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 3px;
+  }
+
+  .pet-card .stat-item .stat-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffd700;
+  }
+
+  .pet-card .pet-skills {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .pet-card .skill-tag {
+    background: rgba(255,255,255,0.08);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    color: #ccc;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .pet-card .duplicate-badge {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #888;
+  }
+
+  /* ===== 图鉴面板 ===== */
+  .collection-panel {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .collection-panel h3 {
+    font-size: 18px;
+    color: #ccc;
+    margin-bottom: 16px;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+
+  .collection-item {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .collection-item.collected { border-color: rgba(255,215,0,0.15); }
+  .collection-item.collected:hover {
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-2px);
+  }
+
+  .collection-item.collected .coll-icon { font-size: 30px; }
+  .collection-item.collected .coll-name {
+    font-size: 10px;
+    color: #aaa;
+    margin-top: 4px;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .collection-item.collected .coll-count {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 10px;
+    color: #ffd700;
+    font-weight: 700;
+  }
+
+  .collection-item.locked .coll-icon {
+    font-size: 24px;
+    opacity: 0.15;
+    color: #fff;
+  }
+  .collection-item.locked .coll-name {
+    font-size: 10px;
+    color: #333;
+    margin-top: 4px;
+  }
+
+  .collection-item .rarity-dot {
+    position: absolute;
+    bottom: 5px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .collection-item .rarity-dot.legendary { background: #ffd700; box-shadow: 0 0 6px #ffd700; }
+  .collection-item .rarity-dot.epic { background: #a855f7; box-shadow: 0 0 6px #a855f7; }
+  .collection-item .rarity-dot.rare { background: #3b82f6; box-shadow: 0 0 4px #3b82f6; }
+  .collection-item .rarity-dot.common { background: #22c55e; box-shadow: 0 0 4px #22c55e; }
+
+  /* 闪光效果 */
+  .flash-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+
+  .flash-overlay.active {
+    opacity: 1;
+  }
+
+  /* 响应式 */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 30px; }
+    .summon-area { width: 300px; height: 300px; }
+    .magic-circle { width: 270px; height: 270px; }
+    .magic-circle .rune-ring { width: 220px; height: 220px; margin: -110px 0 0 -110px; }
+    .magic-circle .rune-ring:nth-child(2) { width: 170px; height: 170px; margin: -85px 0 0 -85px; }
+    .magic-circle .rune-ring:nth-child(3) { width: 120px; height: 120px; margin: -60px 0 0 -60px; }
+    .pet-card .pet-stats { grid-template-columns: repeat(2, 1fr); }
+    .collection-grid { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="stars-canvas" id="starsCanvas"></canvas>
+
+<div class="main-container">
+  <!-- 头部 -->
+  <div class="header">
+    <div class="subtitle">✦ ROCO KINGDOM ✦</div>
+    <h1>精灵召唤</h1>
+    <div class="stats-bar">
+      <span>🎴 已收集 <strong id="collectedCount">0</strong>/<strong id="totalCount">20</strong></span>
+      <span>🪄 召唤次数 <strong id="summonCount">0</strong></span>
+    </div>
+  </div>
+
+  <!-- 召唤阵 -->
+  <div class="summon-area">
+    <div class="magic-circle" id="magicCircle">
+      <div class="rune-ring"></div>
+      <div class="rune-ring"></div>
+      <div class="rune-ring"></div>
+      <div class="rune-mark top">✦</div>
+      <div class="rune-mark bottom">✦</div>
+      <div class="rune-mark left">✦</div>
+      <div class="rune-mark right">✦</div>
+      <div class="center-orb" id="centerOrb"></div>
+    </div>
+  </div>
+
+  <button class="btn-summon" id="btnSummon" onclick="startSummon()">
+    <span class="btn-icon">🪄</span>召 唤 精 灵
+  </button>
+
+  <!-- 结果区 -->
+  <div class="result-area" id="resultArea">
+    <div class="result-title">✨ 点击上方按钮召唤属于你的精灵吧 ✨</div>
+  </div>
+
+  <!-- 图鉴面板 -->
+  <div class="collection-panel">
+    <h3>📖 精灵图鉴</h3>
+    <div class="collection-grid" id="collectionGrid"></div>
+  </div>
+</div>
+
+<!-- 闪光层 -->
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<script>
+// ===== 精灵数据库 =====
+const pets = [
+  // 传说 (Legendary)
+  { id: 'sdimo', name: '圣光迪莫', type: '光系', rarity: 'legendary', icon: '🦄',
+    desc: '迪莫的最终形态，圣光之力照耀大地。洛克王国的象征，代表着光明与希望。',
+    hp: 125, atk: 115, def: 110, spd: 100,
+    skills: ['圣光裁决', '光之庇护', '净化之光'] },
+  { id: 'griffin', name: '皇家狮鹫', type: '翼系 / 光系', rarity: 'legendary', icon: '🦅',
+    desc: '尊贵的皇家狮鹫，翱翔于天际的王者。速度与力量兼备的完美战士。',
+    hp: 110, atk: 120, def: 105, spd: 130,
+    skills: ['风之翼', '神圣冲击', '天空之怒'] },
+  { id: 'luoyin', name: '罗隐', type: '石系 / 恶魔', rarity: 'legendary', icon: '🦖',
+    desc: '从阿米亚特一路进化而来，坚不可摧的岩石之躯。吵醒他的人会后悔。',
+    hp: 140, atk: 134, def: 130, spd: 61,
+    skills: ['岩石爆', '车裂', '冲击死光'] },
+
+  // 史诗 (Epic)
+  { id: 'firegod', name: '火神', type: '火系', rarity: 'epic', icon: '🔥',
+    desc: '火花最终进化，焚尽一切的烈焰之主。推图开荒的最强伙伴。',
+    hp: 105, atk: 120, def: 90, spd: 115,
+    skills: ['烈焰风暴', '火焰漩涡', '爆裂拳'] },
+  { id: 'watergod', name: '水灵', type: '水系', rarity: 'epic', icon: '💧',
+    desc: '水蓝蓝最终进化，掌控水流之力的均衡战士。攻防一体，永不言败。',
+    hp: 115, atk: 95, def: 115, spd: 95,
+    skills: ['水之波动', '潮汐', '治愈之雨'] },
+  { id: 'magiccat', name: '魔力猫', type: '草系', rarity: 'epic', icon: '🌿',
+    desc: '喵喵最终进化，掌控自然之力的森林守护者。催眠+寄生的消耗大师。',
+    hp: 120, atk: 90, def: 110, spd: 85,
+    skills: ['催眠粉', '寄生种子', '飞叶风暴'] },
+  { id: 'snowdoll', name: '雪影娃娃', type: '冰系', rarity: 'epic', icon: '❄️',
+    desc: '冰系人气天花板，可爱外表下藏着冻结一切的绝对零度。',
+    hp: 100, atk: 110, def: 95, spd: 120,
+    skills: ['暴风雪', '冰封之棺', '极光帷幕'] },
+
+  // 稀有 (Rare)
+  { id: 'sleepking', name: '瞌睡王', type: '普通系 / 武系', rarity: 'rare', icon: '😴',
+    desc: '白发懒人的终极形态，拥有全游戏顶尖血量。睡醒之后无人能挡。',
+    hp: 160, atk: 100, def: 95, spd: 55,
+    skills: ['休息恢复', '肘击', '百万吨重拳'] },
+  { id: 'darknight', name: '暗夜骑士', type: '幽灵系 / 恶魔', rarity: 'rare', icon: '⚔️',
+    desc: '追求高贵的战士之魂，身披暗影铠甲的幽暗贵族。黑洞是他的标志。',
+    hp: 106, atk: 102, def: 106, spd: 88,
+    skills: ['黑洞', '回击', '幽冥铠甲'] },
+  { id: 'kula', name: '酷拉', type: '电系', rarity: 'rare', icon: '⚡',
+    desc: '电系经典宠，闪电般的速度与爆发。当年竞技场的噩梦。',
+    hp: 90, atk: 85, def: 80, spd: 135,
+    skills: ['十万伏特', '电磁波', '雷电拳'] },
+  { id: 'phoenix', name: '菲尼克斯', type: '火系 / 翼系', rarity: 'rare', icon: '🐦',
+    desc: '小丹鸟的最终形态，浴火重生的火焰之鸟。拥有绚丽的双属性。',
+    hp: 118, atk: 121, def: 103, spd: 108,
+    skills: ['烈焰云', '风之打击', '火焰护罩'] },
+  { id: 'granball', name: '格兰球', type: '草系', rarity: 'rare', icon: '🌵',
+    desc: '圆滚滚的草系神宠，寄生种子的最强大使。让对手在无声中倒下。',
+    hp: 110, atk: 75, def: 105, spd: 110,
+    skills: ['寄生种子', '催眠粉', '藤鞭'] },
+
+  // 普通 (Common)
+  { id: 'spark', name: '火花', type: '火系', rarity: 'common', icon: '🔥',
+    desc: '御三家之一，充满活力的小火苗。终有一天会成为焚尽一切的火神。',
+    hp: 65, atk: 70, def: 55, spd: 72,
+    skills: ['火苗', '火花四溅', '火焰轮'] },
+  { id: 'meow', name: '喵喵', type: '草系', rarity: 'common', icon: '🐱',
+    desc: '御三家之一，可爱又可靠的草系伙伴。自带回血，新手的福音。',
+    hp: 70, atk: 55, def: 65, spd: 60,
+    skills: ['藤鞭', '寄生种子', '催眠粉'] },
+  { id: 'blueblue', name: '水蓝蓝', type: '水系', rarity: 'common', icon: '💧',
+    desc: '御三家之一，温润灵动的水系精灵。攻防均衡的实力派。',
+    hp: 68, atk: 58, def: 70, spd: 62,
+    skills: ['水枪', '泡泡', '水之波动'] },
+  { id: 'dimo', name: '迪莫', type: '光系', rarity: 'common', icon: '🌟',
+    desc: '洛克王国标志性精灵，拥有圣光血脉的可爱伙伴。未来可期！',
+    hp: 75, atk: 65, def: 60, spd: 70,
+    skills: ['光之箭', '闪光', '光墙'] },
+  { id: 'abu', name: '阿布', type: '普通系', rarity: 'common', icon: '🐣',
+    desc: '神秘的小精灵，体内潜藏着龙族血脉。看似弱小却拥有无限可能。',
+    hp: 80, atk: 60, def: 60, spd: 55,
+    skills: ['撞击', '龙之怒', '神秘守护'] },
+  { id: 'quack', name: '鸭吉吉', type: '普通系', rarity: 'common', icon: '🦆',
+    desc: '圆乎乎的小鸭子，性格有点别扭。低耗技能伤害超乎想象。',
+    hp: 72, atk: 62, def: 58, spd: 65,
+    skills: ['水枪', '挺起胸脯', '翅膀攻击'] },
+  { id: 'chicken', name: '可立鸡', type: '火系', rarity: 'common', icon: '🐔',
+    desc: '维苏威火山的小火鸡，特性可叠加增伤。前期过渡的好帮手。',
+    hp: 60, atk: 68, def: 52, spd: 70,
+    skills: ['啄击', '火焰轮', '热风'] },
+  { id: 'unicorn', name: '白金独角兽', type: '光系', rarity: 'common', icon: '🦄',
+    desc: '闪耀着白金光芒的独角兽，额角可释放魔法冲击。华丽又强大。',
+    hp: 78, atk: 72, def: 65, spd: 85,
+    skills: ['角撞', '光之冲击', '魔法闪耀'] },
+];
+
+// 图鉴索引
+const petIndex = {};
+pets.forEach(p => petIndex[p.id] = p);
+
+// 抽卡概率
+const rarityChances = [
+  { rarity: 'legendary', chance: 0.05, label: '传说' },
+  { rarity: 'epic', chance: 0.15, label: '史诗' },
+  { rarity: 'rare', chance: 0.30, label: '稀有' },
+  { rarity: 'common', chance: 0.50, label: '普通' },
+];
+
+// 收集状态
+let collection = {};    // { petId: count }
+let summonCount = 0;
+
+// 加载存档
+function loadCollection() {
+  const saved = localStorage.getItem('roco_collection');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      collection = data.collection || {};
+      summonCount = data.summonCount || 0;
+    } catch(e) { /* ignore */ }
+  }
+}
+
+function saveCollection() {
+  localStorage.setItem('roco_collection', JSON.stringify({
+    collection, summonCount
+  }));
+}
+
+// ===== 星空背景 =====
+function initStars() {
+  const canvas = document.getElementById('starsCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const stars = [];
+  const STAR_COUNT = 150;
+  for (let i = 0; i < STAR_COUNT; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.5,
+      twinkle: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.02 + 0.005
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 星云
+    const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width/2);
+    grad.addColorStop(0, 'rgba(88,28,135,0.08)');
+    grad.addColorStop(0.5, 'rgba(30,30,80,0.03)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 星星
+    stars.forEach(s => {
+      s.twinkle += s.speed;
+      const alpha = 0.3 + Math.sin(s.twinkle) * 0.3 + 0.3;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,200,255,${alpha})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+}
+
+// ===== 召唤逻辑 =====
+function rollRarity() {
+  const roll = Math.random();
+  let cumulative = 0;
+  for (const rc of rarityChances) {
+    cumulative += rc.chance;
+    if (roll < cumulative) return rc.rarity;
+  }
+  return 'common';
+}
+
+function getPetByRarity(rarity) {
+  const pool = pets.filter(p => p.rarity === rarity);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+const centerOrb = document.getElementById('centerOrb');
+const magicCircle = document.getElementById('magicCircle');
+const btnSummon = document.getElementById('btnSummon');
+const resultArea = document.getElementById('resultArea');
+const flashOverlay = document.getElementById('flashOverlay');
+
+function startSummon() {
+  btnSummon.disabled = true;
+  btnSummon.innerHTML = '<span class="btn-icon">⏳</span>召唤中...';
+
+  // 充能动画
+  magicCircle.classList.add('charging');
+  centerOrb.classList.add('charging');
+
+  // 生成充能粒子
+  spawnChargeParticles();
+
+  // 1.5秒后完成召唤
+  setTimeout(() => {
+    magicCircle.classList.remove('charging');
+    magicCircle.classList.add('summoning');
+    centerOrb.classList.remove('charging');
+
+    // 闪光效果
+    flashOverlay.style.background = 'white';
+    flashOverlay.classList.add('active');
+    setTimeout(() => {
+      flashOverlay.classList.remove('active');
+    }, 200);
+
+    // 抽卡
+    const rarity = rollRarity();
+    const pet = getPetByRarity(rarity);
+
+    // 更新收集
+    summonCount++;
+    if (!collection[pet.id]) collection[pet.id] = 0;
+    collection[pet.id]++;
+    const isDuplicate = collection[pet.id] > 1;
+
+    saveCollection();
+
+    // 显示结果
+    showResult(pet, isDuplicate);
+
+    // 重置
+    setTimeout(() => {
+      magicCircle.classList.remove('summoning');
+      btnSummon.disabled = false;
+      btnSummon.innerHTML = '<span class="btn-icon">🪄</span>召 唤 精 灵';
+      updateStats();
+      updateCollectionGrid();
+    }, 500);
+
+  }, 1500);
+}
+
+function spawnChargeParticles() {
+  const container = document.querySelector('.summon-area');
+  const rect = container.getBoundingClientRect();
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 80 + Math.random() * 90;
+      const x = cx + Math.cos(angle) * dist;
+      const y = cy + Math.sin(angle) * dist;
+      const flyX = (Math.random() - 0.5) * 120;
+      const flyY = (Math.random() - 0.5) * 120;
+      const glowColor = Math.random() > 0.5 ? '#ffd700' : '#a855f7';
+      particle.style.cssText = `
+        left: ${x}px; top: ${y}px;
+        width: ${3 + Math.random() * 4}px;
+        height: ${3 + Math.random() * 4}px;
+        background: ${glowColor};
+        box-shadow: 0 0 8px ${glowColor};
+        --px: ${flyX}px;
+        --py: ${flyY}px;
+        animation: particleFly ${0.6 + Math.random() * 0.8}s ease-out forwards;
+      `;
+      container.appendChild(particle);
+      setTimeout(() => particle.remove(), 1500);
+    }, i * 30);
+  }
+}
+
+// 注入粒子动画样式
+const particleStyle = document.createElement('style');
+particleStyle.textContent = `
+  @keyframes particleFly {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--px), var(--py)) scale(0); opacity: 0; }
+  }
+`;
+document.head.appendChild(particleStyle);
+
+// ===== 展示结果 =====
+function showResult(pet, isDuplicate) {
+  const rarityColors = {
+    legendary: ['#ffd700', '#ff8c00'],
+    epic: ['#a855f7', '#7c3aed'],
+    rare: ['#3b82f6', '#1d4ed8'],
+    common: ['#22c55e', '#15803d'],
+  };
+
+  const rarityLabels = {
+    legendary: '传说', epic: '史诗', rare: '稀有', common: '普通'
+  };
+
+  const [c1, c2] = rarityColors[pet.rarity];
+  const typeColor = pet.type.includes('火') ? '#f97316' :
+                    pet.type.includes('水') ? '#38bdf8' :
+                    pet.type.includes('草') ? '#22c55e' :
+                    pet.type.includes('光') ? '#fbbf24' :
+                    pet.type.includes('冰') ? '#67e8f9' :
+                    pet.type.includes('石') ? '#a8a29e' :
+                    pet.type.includes('电') ? '#facc15' :
+                    pet.type.includes('幽灵') ? '#a78bfa' :
+                    pet.type.includes('恶魔') ? '#ef4444' :
+                    pet.type.includes('翼') ? '#93c5fd' :
+                    pet.type.includes('普通') ? '#d4d4d8' :
+                    '#e0e0e0';
+
+  resultArea.innerHTML = `
+    <div class="pet-card ${pet.rarity}">
+      <div class="rarity-badge ${pet.rarity}">◆ ${rarityLabels[pet.rarity]} ◆</div>
+      <div class="pet-icon">${pet.icon}</div>
+      <div class="pet-name" style="background: linear-gradient(135deg, ${c1}, ${c2}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+        ${pet.name}
+      </div>
+      <div class="pet-type" style="color: ${typeColor}">${pet.type}</div>
+      <div class="pet-desc">${pet.desc}</div>
+      <div class="pet-stats">
+        <div class="stat-item"><div class="stat-label">生命</div><div class="stat-val">${pet.hp}</div></div>
+        <div class="stat-item"><div class="stat-label">攻击</div><div class="stat-val">${pet.atk}</div></div>
+        <div class="stat-item"><div class="stat-label">防御</div><div class="stat-val">${pet.def}</div></div>
+        <div class="stat-item"><div class="stat-label">速度</div><div class="stat-val">${pet.spd}</div></div>
+      </div>
+      <div class="pet-skills">
+        ${pet.skills.map(s => `<span class="skill-tag">✦ ${s}</span>`).join('')}
+      </div>
+      ${isDuplicate ? `<div class="duplicate-badge">📦 已拥有 ×${collection[pet.id]}（重复获得）</div>` : '<div class="duplicate-badge">🎉 首次获得！已收录图鉴</div>'}
+    </div>
+  `;
+}
+
+// ===== 图鉴 =====
+function updateCollectionGrid() {
+  const grid = document.getElementById('collectionGrid');
+  grid.innerHTML = pets.map(p => {
+    if (collection[p.id]) {
+      return `<div class="collection-item collected" title="${p.name} — ${rarityLabel(p.rarity)}">
+        <div class="coll-icon">${p.icon}</div>
+        <div class="coll-name">${p.name}</div>
+        <div class="coll-count">×${collection[p.id]}</div>
+        <div class="rarity-dot ${p.rarity}"></div>
+      </div>`;
+    } else {
+      return `<div class="collection-item locked" title="???">
+        <div class="coll-icon">❓</div>
+        <div class="coll-name">???</div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function rarityLabel(r) {
+  const map = { legendary: '传说', epic: '史诗', rare: '稀有', common: '普通' };
+  return map[r] || r;
+}
+
+// ===== 统计 =====
+function updateStats() {
+  const collected = Object.keys(collection).length;
+  document.getElementById('collectedCount').textContent = collected;
+  document.getElementById('totalCount').textContent = pets.length;
+  document.getElementById('summonCount').textContent = summonCount;
+}
+
+// ===== 初始化 =====
+loadCollection();
+initStars();
+updateCollectionGrid();
+updateStats();
+
+// 键盘快捷键
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && !btnSummon.disabled) {
+    e.preventDefault();
+    startSummon();
+  }
+});
+</script>
+</body>
+</html>
